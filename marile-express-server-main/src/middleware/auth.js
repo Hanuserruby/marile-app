@@ -5,7 +5,6 @@ const { verifyAccessToken } = require("../utils/jwt");
 function authenticate(req, res, next) {
   try {
     let token = null;
-
     const authHeader = req.headers["authorization"];
     if (authHeader?.startsWith("Bearer ")) token = authHeader.slice(7);
     if (!token && req.cookies?.access_token) token = req.cookies.access_token;
@@ -19,7 +18,6 @@ function authenticate(req, res, next) {
       role: decode.role,
       name: decode.name,
     };
-    console.log("user authenticate");
     next();
   } catch (err) {
     if (err.name === "TokenExpiredError")

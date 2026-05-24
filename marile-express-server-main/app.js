@@ -11,20 +11,21 @@ const prisma = require("./src/config/prisma");
 
 const app = express();
 const env = process.env;
-const port = env.PORT;
-const host = env.HOSTNAME;
+const port = env.PORT || 3000;
+const host = env.HOST || 'localhost';
 const api = env.API_URL;
 
 // Midleware
 app.use(helmet());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: env.NODE_ENV == 'production' ? env.CLIENT_URL : 'http://localhost:3001',
   credentials: true,
 }));
-app.use(cookieParser());
+
 
 // Routes
 const authRouter = require('./src/routes/auth');

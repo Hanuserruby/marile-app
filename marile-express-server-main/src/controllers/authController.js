@@ -71,7 +71,7 @@ async function login(req, res) {
           username: user.username,
           role: user.role,
         },
-        accessToken: accessToken,
+        access_token: accessToken,
       },
       "Login successful",
     );
@@ -134,6 +134,7 @@ async function refreshToken(req, res) {
 
     res.cookie("access_token", newAccessToken, ACCESS_COOKIE);
     res.cookie("refresh_token", newRefreshToken, REFRESH_COOKIE);
+
 
     return success(res, { access_token: newAccessToken }, "Token refreshed");
   } catch (err) {

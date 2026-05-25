@@ -1,0 +1,3 @@
+[submodule "marile-server-main"]
+	path = marile-server-main
+	url = https://github.com/mua-restinpeace/marile-express-server.git

@@ -4,16 +4,17 @@ import {
   LayoutDashboard, ShoppingBag, History, Settings, 
   LogOut, Search, Download, Bell, User, Menu, X, ClipboardList 
 } from 'lucide-react';
+import api from '../api/axios';
 
-// PASTIKAN IMPORT INI BENAR
 import '../styles/AdminLayout.css';
-import '../styles/AdminDashboard.css'; // Jika ada style khusus untuk dashboard
-import '../styles/AdminProduct.css'; // Jika ada style khusus untuk products
-import '../styles/AdminHistory.css'; // Jika ada style khusus untuk history
+import '../styles/AdminDashboard.css';
+import '../styles/AdminProduct.css';
+import '../styles/AdminHistory.css';
 
 
 const AdminLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -25,9 +26,41 @@ const AdminLayout = ({ children }) => {
     }
   };
 
+  const handleExport = async (type) => {
+  try {
+    const endpoint = type === 'pdf'
+      ? '/export/sales/pdf?period=month'
+      : '/export/sales/excel?period=month';
+
+    const res = await api.get(endpoint, { responseType: 'blob' });
+
+    const blob = new Blob([res.data], {
+      type: type === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', type === 'pdf'
+      ? 'laporan-penjualan.pdf'
+      : 'laporan-penjualan.xlsx'
+    );
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    // Hanya tampilkan alert jika bukan karena IDM intercept
+    if (err.code !== 'ERR_NETWORK') {
+      alert('Gagal mengexport laporan!');
+    }
+    console.error('Export error:', err);
+  } finally {
+    setShowExportMenu(false);
+  }
+};
+
   return (
     <div className={`admin-wrapper ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-      {/* Overlay mobile */}
       {isSidebarOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
 
       {/* SIDEBAR */}
@@ -41,7 +74,7 @@ const AdminLayout = ({ children }) => {
         </div>
 
         <div className="nav-container">
-          <div className="nav-label">Menu Utama</div> {/* Tambahan label agar lebih rapi */}
+          <div className="nav-label">Menu Utama</div>
           <Link 
             to="/admin" 
             className={`nav-item ${location.pathname === '/admin' ? 'active' : ''}`}
@@ -111,10 +144,39 @@ const AdminLayout = ({ children }) => {
 
           <div className="topbar-actions">
             {location.pathname === '/admin' && (
-              <button className="btn-export">
-                <Download size={16} />
-                <span className="export-text">Export</span>
-              </button>
+              <div style={{ position: 'relative' }}>
+                <button className="btn-export" onClick={() => setShowExportMenu(!showExportMenu)}>
+                  <Download size={16} />
+                  <span className="export-text">Export</span>
+                </button>
+                {showExportMenu && (
+                  <div style={{
+                    position: 'absolute', top: '110%', right: 0,
+                    background: 'white', borderRadius: '10px', zIndex: 999,
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.15)', overflow: 'hidden',
+                    minWidth: '150px'
+                  }}>
+                    <button onClick={() => handleExport('excel')}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '8px',
+                        padding: '10px 16px', width: '100%', border: 'none',
+                        background: 'white', cursor: 'pointer', fontSize: '13px',
+                        fontWeight: 600
+                      }}>
+                      📊 Export Excel
+                    </button>
+                    <button onClick={() => handleExport('pdf')}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '8px',
+                        padding: '10px 16px', width: '100%', border: 'none',
+                        background: 'white', cursor: 'pointer', fontSize: '13px',
+                        fontWeight: 600
+                      }}>
+                      📄 Export PDF
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
 
             <div className="icon-btn">

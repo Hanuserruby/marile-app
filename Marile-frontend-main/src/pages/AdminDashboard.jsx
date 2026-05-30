@@ -29,7 +29,7 @@ const AdminDashboard = () => {
         const [summaryRes, chartRes, topRes, snapshotRes] = await Promise.all([
           api.get('/dashboard/summary'),
           api.get('/dashboard/revenue-chart?range=12m'),
-          api.get('/dashboard/top-products'),
+          api.get('/dashboard/top-products?period=month'),
           api.get('/dashboard/snapshot'),
         ]);
 
@@ -44,9 +44,17 @@ const AdminDashboard = () => {
         }));
         setChartData(formatted);
 
-        // Top products
+        
+        // Top products — gabungkan dengan data produk untuk dapat image_url
         const top = topRes.data.data.top_by_quantity || [];
-        setTopProducts(top.slice(0, 2));
+        const productsRes = await api.get('/products');
+        const allProducts = productsRes.data.data.products || [];
+
+        const topWithImage = top.slice(0, 2).map(p => {
+          const found = allProducts.find(prod => prod.id === p.product_id);
+          return { ...p, image_url: found?.image_url || null };
+        });
+        setTopProducts(topWithImage);
 
         // Pie chart dari top products by revenue
         const byRevenue = topRes.data.data.top_by_revenue || [];
@@ -173,7 +181,7 @@ const AdminDashboard = () => {
                   topProducts.map((p) => (
                     <div className="produk-item" key={p.product_id}>
                       <div className="produk-thumb">
-                        <img src="/assets/img/fish.svg" alt={p.product_name} />
+                        <img src={p.image_url ? `http://localhost:8000${p.image_url}` : '/assets/img/fish.svg'} alt={p.product_name} />
                       </div>
                       <div style={{ flex: 1, fontWeight: 700 }}>{p.product_name}</div>
                       <div style={{ fontSize: '12px', color: 'var(--muted)' }}>

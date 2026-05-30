@@ -83,7 +83,7 @@ const AdminProducts = () => {
                   <div className="col-info">
                     <div className="product-img-wrapper">
                       <img
-                        src={p.image_url || '/assets/img/fish.svg'}
+                        src={p.image_url ? `http://localhost:8000${p.image_url}` : '/assets/img/fish.svg'}
                         alt={p.name}
                       />
                     </div>

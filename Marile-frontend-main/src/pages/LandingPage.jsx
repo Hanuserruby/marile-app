@@ -60,10 +60,7 @@ function LandingPage() {
               key={product.product_id}
             >
               <img
-                src={
-                  product.image_url ||
-                  "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
-                }
+               src={product.image_url ? `http://localhost:8000${product.image_url}` : "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"}
                 alt={product.product_name}
               />
               <div
@@ -109,10 +106,7 @@ function LandingPage() {
             menu.map((product) => (
               <div className="menu-card" key={product.id}>
                 <img
-                  src={
-                    product.image_url ||
-                    "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
-                  }
+                  src={product.image_url ? `http://localhost:8000${product.image_url}` : "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"}
                   alt={product.name}
                 />
                 <h4>{product.name}</h4>

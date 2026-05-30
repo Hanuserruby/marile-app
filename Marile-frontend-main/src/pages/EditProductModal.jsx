@@ -43,25 +43,29 @@ const EditProductModal = ({ isOpen, onClose, product, onSuccess }) => {
 
   // Simpan perubahan info produk (nama, harga, kategori)
   const handleSubmitInfo = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccessMsg('');
-    try {
-      await api.put(`/products/${product.id}`, {
-        name: formData.name,
-        category: formData.category,
-        price: Number(formData.price),
-        unit: formData.unit,
-      });
-      setSuccessMsg('Informasi produk berhasil diperbarui!');
-      onSuccess();
-    } catch (err) {
-      setError(err.response?.data?.message || 'Gagal mengupdate produk');
-    } finally {
-      setLoading(false);
-    }
-  };
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+  setSuccessMsg('');
+  try {
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('category', formData.category);
+    data.append('price', Number(formData.price));
+    data.append('unit', formData.unit);
+    if (imageFile) data.append('image', imageFile);
+
+    await api.put(`/products/${product.id}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    setSuccessMsg('Informasi produk berhasil diperbarui!');
+    onSuccess();
+  } catch (err) {
+    setError(err.response?.data?.message || 'Gagal mengupdate produk');
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Tambah stok via restock
   const handleRestock = async () => {

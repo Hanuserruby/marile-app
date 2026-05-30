@@ -92,7 +92,7 @@ const CashierDashboard = () => {
                   >
                     <div className="img-wrapper">
                       <img
-                        src={product.image_url || '/assets/img/fish.svg'}
+                        src={product.image_url ? `http://localhost:8000${product.image_url}` : '/assets/img/fish.svg'}
                         alt={product.name}
                       />
                     </div>
@@ -124,7 +124,7 @@ const CashierDashboard = () => {
               cart.map((item) => (
                 <div className="cart-item" key={item.id}>
                   <img
-                    src={item.image_url || '/assets/img/fish.svg'}
+                    src={item.image_url ? `http://localhost:8000${item.image_url}` : '/assets/img/fish.svg'}
                     alt={item.name}
                   />
                   <div className="item-detail">

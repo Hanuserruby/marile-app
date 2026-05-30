@@ -385,8 +385,9 @@ function BestSeller({ bestSeller }) {
               <div className="relative overflow-hidden rounded-3xl bg-cream aspect-[4/5]">
                 <img
                   src={
-                    item.image_url ||
-                    "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
+                    item.image_url
+                    ? `http://localhost:5000${item.image_url}`
+                    : "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
                   }
                   alt={item.product_name}
                   width={800}
@@ -443,8 +444,9 @@ function MainMenu({ menu }) {
               <div className="relative aspect-square overflow-hidden rounded-2xl bg-background">
                 <img
                   src={
-                    item.image_url ||
-                    "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
+                    item.image_url
+                    ? `http://localhost:5000${item.image_url}`
+                    : "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
                   }
                   alt={item.name}
                   width={400}

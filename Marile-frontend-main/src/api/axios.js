@@ -13,7 +13,6 @@ function processQueue(error) {
     if (error) reject(error);
     else resolve();
   });
-
   failedQueue = [];
 }
 
@@ -22,7 +21,15 @@ api.interceptors.response.use(
   async (err) => {
     const originalRequest = err.config;
 
-    if (err.response?.status === 401 && !originalRequest._retry) {
+    const isLoginRequest = originalRequest.url.includes("/auth/login");
+    const isRefreshRequest = originalRequest.url.includes("/auth/refresh");
+
+    if (
+      err.response?.status === 401 &&
+      !originalRequest._retry &&        
+      !isLoginRequest &&                
+      !isRefreshRequest                 
+    ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -31,19 +38,15 @@ api.interceptors.response.use(
           .catch((e) => Promise.reject(e));
       }
 
-      originalRequest.retry = true;
+      originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        // ask new access token
         await api.post("/auth/refresh");
-        console.log("access token refreshed");
-
         processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-
         window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {

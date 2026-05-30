@@ -1,3 +1,14 @@
+/* --- IMPORT FONT --- */
+@import url('https://fonts.googleapis.com/css2?family=Gloock&family=Urbanist:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary-teal: #339b89;
+    --secondary-orange: #e39665;
+    --text-dark: #222222;
+    --bg-light: #ffffff;
+    --bg-gray: #f2f2f2;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -6,5 +17,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Urbanist', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
     line-height: 1.5;
 }

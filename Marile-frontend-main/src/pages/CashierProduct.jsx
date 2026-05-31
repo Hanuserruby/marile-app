@@ -4,6 +4,7 @@ import '../styles/CashierProduct.css';
 import api from '../api/axios';
 
 const CashierProducts = () => {
+  const API_URL = process.env.REACT_APP_API_BASEURL;
   const [activeFilter, setActiveFilter] = useState('Semua');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +60,11 @@ const CashierProducts = () => {
                 <div className="product-list-row" key={p.id}>
                   <div className="col-name">
                     <div className="img-thumbnail">
-                      <img src={p.image_url ? `http://localhost:8000${p.image_url}` : '/assets/img/fish.svg'} alt={p.name} />
+                      <img src={
+                          p.image_url
+                            ? `${API_URL}${p.image_url}`
+                            : "/assets/img/fish.svg"
+                        } alt={p.name} />
                     </div>
                     <span className="p-text-bold">{p.name}</span>
                   </div>

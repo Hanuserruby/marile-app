@@ -23,6 +23,8 @@ import heroFish1 from "../assets/hero-fish-1.png";
 import heroFish2 from "../assets/hero-fish-2.png";
 import heroFish3 from "../assets/hero-fish-3.png";
 
+const API_URL = process.env.REACT_APP_API_BASEURL;
+
 const heroSlides = [
   {
     img: heroFish1,
@@ -386,8 +388,8 @@ function BestSeller({ bestSeller }) {
                 <img
                   src={
                     item.image_url
-                    ? `http://localhost:5000${item.image_url}`
-                    : "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
+                      ? `${API_URL}${item.image_url}`
+                      : "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
                   }
                   alt={item.product_name}
                   width={800}
@@ -445,8 +447,8 @@ function MainMenu({ menu }) {
                 <img
                   src={
                     item.image_url
-                    ? `http://localhost:5000${item.image_url}`
-                    : "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
+                      ? `${API_URL}${item.image_url}`
+                      : "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=400"
                   }
                   alt={item.name}
                   width={400}
@@ -459,7 +461,12 @@ function MainMenu({ menu }) {
                 <h3 className="font-serif text-base text-ink">{item.name}</h3>
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Rp. {item.price} / kg
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                }).format(item.price)}{" "}
+                / {item.unit}
               </p>
             </article>
           ))}
@@ -529,10 +536,10 @@ function FindUs() {
                   rel="noreferrer"
                 >
                   <div className="flex items-center gap-2">
-                    <FaInstagram className="h-4 w-4 text-primary" /> <span className="text-ink">@marile.co.id</span>
+                    <FaInstagram className="h-4 w-4 text-primary" />{" "}
+                    <span className="text-ink">@marile.co.id</span>
                   </div>
                 </a>
-                
               </div>
             </div>
           </div>

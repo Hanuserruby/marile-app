@@ -6,6 +6,7 @@ import CashierPayment from '../components/CashierPayment';
 import api from '../api/axios';
 
 const CashierDashboard = () => {
+  const API_URL = process.env.REACT_APP_API_BASEURL;
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState('Semua');
@@ -92,7 +93,11 @@ const CashierDashboard = () => {
                   >
                     <div className="img-wrapper">
                       <img
-                        src={product.image_url ? `http://localhost:8000${product.image_url}` : '/assets/img/fish.svg'}
+                        src={
+                          product.image_url
+                            ? `${API_URL}${product.image_url}`
+                            : "/assets/img/fish.svg"
+                        }
                         alt={product.name}
                       />
                     </div>
@@ -124,7 +129,11 @@ const CashierDashboard = () => {
               cart.map((item) => (
                 <div className="cart-item" key={item.id}>
                   <img
-                    src={item.image_url ? `http://localhost:8000${item.image_url}` : '/assets/img/fish.svg'}
+                    src={
+                          item.image_url
+                            ? `${API_URL}${item.image_url}`
+                            : "/assets/img/fish.svg"
+                        }
                     alt={item.name}
                   />
                   <div className="item-detail">
